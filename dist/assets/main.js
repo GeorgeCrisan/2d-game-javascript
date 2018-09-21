@@ -106,3 +106,28 @@ var State = function () {
 
     return State;
 }();
+
+var Player = function () {
+    function Player(pos, speed) {
+        _classCallCheck(this, Player);
+
+        this.pos = pos;
+        this.speed = speed;
+    }
+
+    _createClass(Player, [{
+        key: 'type',
+        get: function get() {
+            return 'player';
+        }
+    }], [{
+        key: 'create',
+        value: function create(pos) {
+            return new Player(pos.plus(new Vector(0, -0.5)), new Vector(0, 0));
+        }
+    }]);
+
+    return Player;
+}();
+
+Player.prototype.size = new Vector(0.8, 1.5);
