@@ -18,36 +18,78 @@ window.onerror = function (msg, url, lineNo, columnNo, error) {
     return false;
 };
 
+ // basic simple plan
+let simpleLevelPlan = `
+......................
+..#................#..
+..#..............=.#..
+..#.........o.o....#..
+..#.@......#####...#..
+..#####............#..
+......#++++++++++++#..
+......##############..
+......................`; 
 
-console.log('run');
+class Vector{
+      constructor(x,y){
+          this.x = x;
+          this.y = y;
+      }
+      plus(otherVector){
+           return new Vector(thix.x + otherVector.x, thix.y + otherVector.y);
+      }
+
+      times(factor){
+          return new Vector(this.x * factor, this.y * factor);
+      }
+
+}
 
 
+class Level {
+     constructor(plan){
+         // rows is taking the plan strin and creates a 2 d array 
+             let rows = plan.trim().split('\n').map(el=>{return [...el]});
+              //get the height 
+             this.height = rows.length;
+             //get the width
+             this.width = rows[0].length;
+             //here we going to store the  gameElements like hero '@', coins '0', lava '+' , '='   
+             this.gameElements = []; 
+             //map over the rows and find out position of the game elements in terms of vectors x,y (mx and y are indexes from map)
+             // worldElements going to be strings and 
+             this.rows = rows.map((rowArray,y)=>{
+                   return rowArray.map((ch,x)=>{
+                       //if type 
+                        let type = globalElements[ch];
+                            if(typeof type === "string")
+                                return type;
+                            
+                            this.gameElements.push(type.create(new Vector(x,y),ch));
+                            return 'empty';
 
-
-
-
-
-let adds = document.querySelectorAll('.well');
-console.log(adds);
-
-
-adds.forEach((el)=>{
-    let div = document.createElement('DIV');
-    let textNode = document.createTextNode('some node');
-    div.appendChild(textNode);
-    el.appendChild(div);
-});
-
-window.addEventListener('scroll',()=>{
-    window.innerHeight+= 50;
-     if(window.innerHeight > 50){
-          console.log('scroll event');
+                   });
+             });
      }
-});
+}
 
-console.log(window.history);
-console.log(window.navigator.geolocation.getCurrentPosition((data)=>{
-    console.log(data);
-    
-}));
+//simple test
+let newlevel = new Level(simpleLevelPlan);
+console.log(newlevel);
 
+
+class State {
+     constructor(level,actors, status){
+          this.level = level;
+          this.actors = actors;
+          this.status = status;
+     }
+
+     static start(level){
+         return new State(level, level.gameElements, 'gameon');
+     }
+
+     get player(){
+          return this.actors.find((el)=>{ return el.type === 'player'});
+     }
+}
